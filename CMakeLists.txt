@@ -47,7 +47,7 @@ target_compile_options(progresscpp INTERFACE "$<$<BOOL:${MSVC}>:/permissive->")
 target_include_directories(progresscpp
         INTERFACE
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
+        $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
         )
 
 # ---- Create an installable target ----
