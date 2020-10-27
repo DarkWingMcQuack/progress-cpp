@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 /* Example usage of ProgressBar */
-int main()
+auto main() -> int
 {
     const int total = 10000;
 
@@ -12,32 +12,33 @@ int main()
      * a width of 70, shows `#` to indicate completion
      * and a dash '-' for incomplete
      */
-    progresscpp::ProgressBar progressBar0(total, 70, '#', '-');
+    progresscpp::ProgressBar progress_bar0(total, 70, '#', '-');
 
     for(int i = 0; i < total; i++) {
-        ++progressBar0; // record the tick
+        ++progress_bar0; // record the tick
 
         usleep(200); // simulate work
 
-        // display the bar only at certain steps
-        if(i % 10 == 0)
-            progressBar0.display();
+        // display the bar only when there was at least 5% progress
+        // since the last time it was displayed
+        progress_bar0.displayIfChangedAtLeast(0.05);
     }
 
     // tell the bar to finish
-    progressBar0.done();
+    progress_bar0.done();
 
-    progresscpp::ProgressBar progressBar1(total, 70, '#', '-');
 
-    for(int i = 0; i < total / 2; i++) {
-        ++progressBar1; // record the tick
+    progresscpp::ProgressBar progress_bar1(total, 70, '#', '-');
+    for(int i = 0; i < total / 1.2; i++) {
+        ++progress_bar1; // record the tick
 
         usleep(200); // simulate work
 
-        // display the bar only at certain steps
-        if(i % 10 == 0)
-            progressBar1.display();
+        // display the bar only when there was at least 10% progress
+        // since the last time it was displayed
+        progress_bar1.displayIfChangedAtLeast(0.1);
     }
 
-    progressBar1.failure("unexpected error");
+    //let the bar fail
+    progress_bar1.failure("unexpected error");
 }
