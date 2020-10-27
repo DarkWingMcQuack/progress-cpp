@@ -79,7 +79,7 @@ auto displayIfChangedAtLeast(double percent) noexcept -> void;
 ```
 This method can be used to avoid redisplaying and therefore flushing.
 It expects a `double` which should be between 0 and 1.
-This method only redisplays the bar if process has increased at least by the given double since the
+This method only redisplays the bar if progress has increased at least by the given double since the
 last time it was displayed.
 
 ### Example
