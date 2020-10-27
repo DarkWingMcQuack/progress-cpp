@@ -2,6 +2,8 @@ Progress-CPP
 ===
 
 A flexible ASCII progress bar for your console based C++ projects.
+![](example/overview.gif)
+
 
 ### Usage
 Progress is a header-only library and can be used by simply including the `ProgressBar.hpp` header file.
@@ -37,10 +39,37 @@ int main() {
 ```
 The above code results in the following output
 
-```
-[===================>                                                 ] 29% 0.821s
-```
+![](example/success.gif)
 
+
+Instead of successfully being done, a `ProgessBar` can also fail
+```c++
+#include "ProgressBar.hpp"
+
+int main() {
+
+    const int limit = 10000;
+
+    // initialize the bar
+    ProgressBar progressBar(limit, 70);
+
+    for (int i = 0; i < limit / 1.2; i++) {
+        // record the tick
+        ++progressBar;
+
+        // display the bar
+        progressBar.display();
+    }
+
+    // tell the bar to finish
+    progressBar.failure();
+}
+```
+The above code results in the following output
+
+![](example/failure.gif)
+
+The `ProgressBar::failure` can also be called with a reason of the failure, which then will be displayed.
 
 ### Example
 Refer to [example.cpp](example/src/example.cpp) file for an example usage. To run it,
