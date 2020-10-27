@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <string_view>
 
@@ -16,7 +17,7 @@ public:
                 number_type width,
                 char complete = '=',
                 char incomplete = ' ',
-                char arrow = ' ') noexcept
+                char arrow = '>') noexcept
         : total_ticks_{total},
           bar_width_{width},
           complete_char_{complete},
@@ -60,24 +61,18 @@ public:
 
         auto time_elapsed = millisecondSinceStart();
 
-        std::cout << "[";
-
-        for(number_type i{0}; i < bar_width_; ++i) {
-            if(i < pos)
-                std::cout << complete_char_;
-            else if(i == pos)
-                std::cout << ">";
-            else
-                std::cout << incomplete_char_;
-        }
-
-        std::cout << "] "
+        std::cout << "["
+                  << std::setfill(complete_char_)
+                  << std::setw(pos)
+                  << (pos == bar_width_ ? '\0' : arrow_char_)
+                  << std::setfill(incomplete_char_)
+                  << std::setw(bar_width_ - pos)
+                  << "] "
                   << static_cast<int>(progress * 100.0)
                   << "% "
                   << static_cast<double>(time_elapsed) / 1000.0
-                  << "s\r";
-
-        std::cout.flush();
+                  << "s\r"
+                  << std::flush;
     }
 
     // displays the bar only if it was changed at least by the given
