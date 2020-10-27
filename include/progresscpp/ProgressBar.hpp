@@ -56,7 +56,7 @@ public:
     {
         drawed_ticks_ = ticks_;
 
-        auto progress = static_cast<float>(ticks_) / total_ticks_;
+        auto progress = static_cast<double>(ticks_) / total_ticks_;
         auto pos = static_cast<number_type>(bar_width_ * progress);
 
         auto time_elapsed = millisecondSinceStart();
@@ -75,7 +75,7 @@ public:
         std::cout << "] "
                   << static_cast<int>(progress * 100.0)
                   << "% "
-                  << static_cast<float>(time_elapsed) / 1000.0
+                  << static_cast<double>(time_elapsed) / 1000.0
                   << "s\r";
 
         std::cout.flush();
