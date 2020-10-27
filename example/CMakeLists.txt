@@ -20,7 +20,7 @@ file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 add_executable(progresscppExample ${sources})
 
 set_target_properties(progresscppExample PROPERTIES
-        CXX_STANDARD 11
+        CXX_STANDARD 17
         OUTPUT_NAME "Progress-cpp Example"
         )
 
