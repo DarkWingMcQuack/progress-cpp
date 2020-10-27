@@ -12,8 +12,8 @@ public:
     using number_type = T;
 
     ProgressBar(number_type total,
-				number_type width,
-				char complete,
+                number_type width,
+                char complete,
                 char incomplete) noexcept
         : total_ticks_{total},
           bar_width_{width},
@@ -22,6 +22,12 @@ public:
 
     ProgressBar(number_type total, number_type width) noexcept
         : total_ticks_{total}, bar_width_{width} {}
+
+    ProgressBar(ProgressBar&&) noexcept = default;
+    ProgressBar(const ProgressBar&&) = delete;
+
+    auto operator=(ProgressBar&&) noexcept -> ProgressBar& = default;
+    auto operator=(const ProgressBar&) -> ProgressBar& = default;
 
     auto operator++() noexcept
         -> number_type
