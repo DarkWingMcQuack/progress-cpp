@@ -56,10 +56,7 @@ public:
         auto progress = static_cast<float>(ticks_) / total_ticks_;
         auto pos = static_cast<number_type>(bar_width_ * progress);
 
-        auto now = std::chrono::steady_clock::now();
-        auto time_elapsed =
-            std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_)
-                .count();
+        auto time_elapsed = millisecondSinceStart();
 
         std::cout << "[";
 
@@ -72,9 +69,21 @@ public:
                 std::cout << incomplete_char_;
         }
 
-        std::cout << "] " << int(progress * 100.0) << "% "
-                  << float(time_elapsed) / 1000.0 << "s\r";
+        std::cout << "] "
+                  << static_cast<int>(progress * 100.0)
+                  << "% "
+                  << static_cast<float>(time_elapsed) / 1000.0
+                  << "s\r";
+
         std::cout.flush();
+    }
+
+    auto millisecondSinceStart() const noexcept
+        -> long
+    {
+        auto now = std::chrono::steady_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_)
+            .count();
     }
 
     auto done() noexcept
