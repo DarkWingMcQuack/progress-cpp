@@ -14,15 +14,14 @@ public:
 
     ProgressBar(number_type total,
                 number_type width,
-                char complete,
-                char incomplete) noexcept
+                char complete = '=',
+                char incomplete = ' ',
+                char arrow = ' ') noexcept
         : total_ticks_{total},
           bar_width_{width},
           complete_char_{complete},
-          incomplete_char_{incomplete} {}
-
-    ProgressBar(number_type total, number_type width) noexcept
-        : total_ticks_{total}, bar_width_{width} {}
+          incomplete_char_{incomplete},
+          arrow_char_{arrow} {}
 
     ProgressBar(ProgressBar&&) noexcept = default;
     ProgressBar(const ProgressBar&&) = delete;
@@ -133,13 +132,14 @@ public:
 private:
     number_type drawed_ticks_ = 0;
     number_type ticks_ = 0;
+    std::chrono::steady_clock::time_point start_time_ =
+        std::chrono::steady_clock::now();
 
     const number_type total_ticks_;
     const number_type bar_width_;
-    const char complete_char_ = '=';
-    const char incomplete_char_ = ' ';
-    std::chrono::steady_clock::time_point start_time_ =
-        std::chrono::steady_clock::now();
+    const char complete_char_;
+    const char incomplete_char_;
+    const char arrow_char_;
 };
 
 } // namespace progresscpp

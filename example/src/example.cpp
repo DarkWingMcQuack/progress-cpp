@@ -41,4 +41,18 @@ auto main() -> int
 
     //let the bar fail
     progress_bar1.failure("unexpected error");
+
+
+    progresscpp::ProgressBar progress_bar2(total, 70, '-');
+    for(int i = 0; i < total / 1.2; i++) {
+        ++progress_bar2; // record the tick
+
+        usleep(200); // simulate work
+
+        // display the bar only when there was at least 1% progress
+        // since the last time it was displayed
+        progress_bar2.displayIfChangedAtLeast(0.01);
+    }
+
+    progress_bar2.done();
 }
