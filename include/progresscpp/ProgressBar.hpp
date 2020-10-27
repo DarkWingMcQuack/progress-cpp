@@ -53,7 +53,7 @@ public:
         -> void
     {
         auto progress = static_cast<float>(ticks_) / total_ticks_;
-        auto pos = static_cast<int>(bar_width_ * progress);
+        auto pos = static_cast<std::size_t>(bar_width_ * progress);
 
         auto now = std::chrono::steady_clock::now();
         auto time_elapsed =
