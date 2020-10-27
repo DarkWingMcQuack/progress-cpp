@@ -70,15 +70,16 @@ public:
             else
                 std::cout << incomplete_char_;
         }
-		
+
         std::cout << "] " << int(progress * 100.0) << "% "
                   << float(time_elapsed) / 1000.0 << "s\r";
         std::cout.flush();
     }
 
-    auto done() const noexcept
+    auto done() noexcept
         -> void
     {
+        ticks_ = total_ticks_;
         display();
         std::cout << std::endl;
     }
