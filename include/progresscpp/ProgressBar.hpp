@@ -65,7 +65,7 @@ public:
                   << std::setw(pos)
                   << (pos == bar_width_ ? '\0' : arrow_char_)
                   << std::setfill(incomplete_char_)
-                  << std::setw(bar_width_ - pos)
+                  << std::setw(bar_width_ - pos + 1)
                   << "] "
                   << static_cast<int>(progress * 100.0)
                   << "% "
@@ -120,6 +120,15 @@ public:
         std::cout << "\n"
                   << error_message
                   << "\033[0m"
+                  << std::endl;
+    }
+
+    auto failure() noexcept
+        -> void
+    {
+        std::cout << "\033[1;31m";
+        display();
+        std::cout << "\033[0m"
                   << std::endl;
     }
 
