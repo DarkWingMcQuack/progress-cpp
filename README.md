@@ -71,6 +71,17 @@ The above code results in the following output
 
 The `ProgressBar::failure` can also be called with a reason of the failure, which then will be displayed.
 
+### Performance
+Everytime the `ProgressBar::display` method is called `std::cout << std::flush` is called, which can be quite slow.
+To avoid this, use the `ProgressBar::displayIfChangedAtLeast` method:
+```c++
+auto displayIfChangedAtLeast(double percent) noexcept -> void;
+```
+This method can be used to avoid redisplaying and therefore flushing.
+It expects a `double` which should be between 0 and 1.
+This method only redisplays the bar if process has increased at least by the given double since the
+last time it was displayed.
+
 ### Example
 Refer to [example.cpp](example/src/example.cpp) file for an example usage. To run it,
 
