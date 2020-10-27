@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <string_view>
 
 namespace progresscpp {
 
@@ -50,9 +51,11 @@ public:
         return *this;
     }
 
-    auto display() const noexcept
+    auto display() noexcept
         -> void
     {
+        drawed_ticks_ = ticks_;
+
         auto progress = static_cast<float>(ticks_) / total_ticks_;
         auto pos = static_cast<number_type>(bar_width_ * progress);
 
@@ -78,6 +81,19 @@ public:
         std::cout.flush();
     }
 
+    // displays the bar only if it was changed at least by the given
+    // amount of percent since it was last displayed
+    auto displayIfChangedAtLeast(double percent) noexcept
+        -> void
+    {
+        auto new_progress = static_cast<float>(ticks_) / total_ticks_;
+        auto old_progress = static_cast<float>(drawed_ticks_) / total_ticks_;
+
+        if(new_progress - old_progress >= percent) {
+            display();
+        }
+    }
+
     auto millisecondSinceStart() const noexcept
         -> long
     {
@@ -86,22 +102,43 @@ public:
             .count();
     }
 
+    auto restart() noexcept
+        -> void
+    {
+        ticks_ = 0;
+        start_time_ = std::chrono::steady_clock::now();
+    }
+
     auto done() noexcept
         -> void
     {
         ticks_ = total_ticks_;
+        std::cout << "\033[1;32m";
         display();
+        std::cout << "\033[0m";
         std::cout << std::endl;
     }
 
+    auto failure(std::string_view error_message) noexcept
+        -> void
+    {
+        std::cout << "\033[1;31m";
+        display();
+        std::cout << "\n"
+                  << error_message
+                  << "\033[0m"
+                  << std::endl;
+    }
+
 private:
+    mutable number_type drawed_ticks_ = 0;
     number_type ticks_ = 0;
 
     const number_type total_ticks_;
     const number_type bar_width_;
     const char complete_char_ = '=';
     const char incomplete_char_ = ' ';
-    const std::chrono::steady_clock::time_point start_time_ =
+    std::chrono::steady_clock::time_point start_time_ =
         std::chrono::steady_clock::now();
 };
 

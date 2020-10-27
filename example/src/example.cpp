@@ -1,9 +1,10 @@
+#include "progresscpp/ProgressBar.hpp"
 #include <iostream>
 #include <unistd.h>
-#include "progresscpp/ProgressBar.hpp"
 
 /* Example usage of ProgressBar */
-int main() {
+int main()
+{
     const int total = 10000;
 
     /*
@@ -11,21 +12,32 @@ int main() {
      * a width of 70, shows `#` to indicate completion
      * and a dash '-' for incomplete
      */
-    progresscpp::ProgressBar progressBar(total, 70, '#', '-');
+    progresscpp::ProgressBar progressBar0(total, 70, '#', '-');
 
-    for (int i = 0; i < total; i++) {
-        ++progressBar; // record the tick
+    for(int i = 0; i < total; i++) {
+        ++progressBar0; // record the tick
 
         usleep(200); // simulate work
 
         // display the bar only at certain steps
-        if (i % 10 == 0)
-            progressBar.display();
+        if(i % 10 == 0)
+            progressBar0.display();
     }
 
     // tell the bar to finish
-    progressBar.done();
+    progressBar0.done();
 
-    std::cout << "Done!" << std::endl;
-    return 0;
+    progresscpp::ProgressBar progressBar1(total, 70, '#', '-');
+
+    for(int i = 0; i < total / 2; i++) {
+        ++progressBar1; // record the tick
+
+        usleep(200); // simulate work
+
+        // display the bar only at certain steps
+        if(i % 10 == 0)
+            progressBar1.display();
+    }
+
+    progressBar1.failure("unexpected error");
 }
