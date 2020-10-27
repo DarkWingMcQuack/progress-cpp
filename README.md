@@ -11,6 +11,7 @@ The bar takes the following options at initialization
 - Width: width of the bar
 - Complete Char: the character to indicate completion (defaults to `=`)
 - Incomplete Char: the character to indicate pending. (defaults to ' ')
+- Arrow Char: the rightmost complete char. (defaults to `>`)
 
 ```c++
 #include "ProgressBar.hpp"
@@ -39,6 +40,7 @@ The above code results in the following output
 ```
 [===================>                                                 ] 29% 0.821s
 ```
+
 
 ### Example
 Refer to [example.cpp](example/src/example.cpp) file for an example usage. To run it,
