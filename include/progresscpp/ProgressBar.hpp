@@ -131,7 +131,7 @@ public:
     }
 
 private:
-    mutable number_type drawed_ticks_ = 0;
+    number_type drawed_ticks_ = 0;
     number_type ticks_ = 0;
 
     const number_type total_ticks_;
