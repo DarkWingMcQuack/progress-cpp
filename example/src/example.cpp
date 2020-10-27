@@ -40,7 +40,7 @@ auto main() -> int
     }
 
     //let the bar fail
-    progress_bar1.failure("unexpected error");
+    progress_bar1.failure();
 
 
     progresscpp::ProgressBar progress_bar2(total, 70, '-');
