@@ -4,61 +4,84 @@
 #include <iostream>
 
 namespace progresscpp {
+
 class ProgressBar
 {
 private:
-    unsigned int ticks = 0;
+    std::size_t ticks_ = 0;
 
-    const unsigned int total_ticks;
-    const unsigned int bar_width;
-    const char complete_char = '=';
-    const char incomplete_char = ' ';
-    const std::chrono::steady_clock::time_point start_time =
+    const std::size_t total_ticks_;
+    const std::size_t bar_width_;
+    const char complete_char_ = '=';
+    const char incomplete_char_ = ' ';
+    const std::chrono::steady_clock::time_point start_time_ =
         std::chrono::steady_clock::now();
 
 public:
-    ProgressBar(unsigned int total, unsigned int width, char complete,
-                char incomplete)
-        : total_ticks{total}, bar_width{width}, complete_char{complete}, incomplete_char{incomplete} {}
+    ProgressBar(std::size_t total, std::size_t width, char complete,
+                char incomplete) noexcept
+        : total_ticks_{total},
+          bar_width_{width},
+          complete_char_{complete},
+          incomplete_char_{incomplete} {}
 
-    ProgressBar(unsigned int total, unsigned int width)
-        : total_ticks{total}, bar_width{width} {}
+    ProgressBar(std::size_t total, std::size_t width) noexcept
+        : total_ticks_{total}, bar_width_{width} {}
 
-    unsigned int operator++()
+    auto operator++() noexcept
+        -> std::size_t
     {
-        return ++ticks;
+        ticks_ = std::min(total_ticks_, ticks_ + 1);
+        return ticks_;
     }
 
-    void display() const
+    auto operator++(int) noexcept
+        -> std::size_t
     {
-        float progress = (float)ticks / total_ticks;
-        int pos = (int)(bar_width * progress);
+        ticks_ = std::min(total_ticks_, ticks_ + 1);
+        return ticks_;
+    }
 
-        std::chrono::steady_clock::time_point now =
-            std::chrono::steady_clock::now();
+    auto operator+=(std::size_t i) noexcept
+        -> ProgressBar&
+    {
+        ticks_ = std::min(total_ticks_, ticks_ + i);
+        return *this;
+    }
+
+    auto display() const noexcept
+        -> void
+    {
+        auto progress = static_cast<float>(ticks_) / total_ticks_;
+        auto pos = static_cast<int>(bar_width_ * progress);
+
+        auto now = std::chrono::steady_clock::now();
         auto time_elapsed =
-            std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time)
+            std::chrono::duration_cast<std::chrono::milliseconds>(now - start_time_)
                 .count();
 
         std::cout << "[";
 
-        for(int i = 0; i < bar_width; ++i) {
+        for(size_t i{0}; i < bar_width_; ++i) {
             if(i < pos)
-                std::cout << complete_char;
+                std::cout << complete_char_;
             else if(i == pos)
                 std::cout << ">";
             else
-                std::cout << incomplete_char;
+                std::cout << incomplete_char_;
         }
+		
         std::cout << "] " << int(progress * 100.0) << "% "
                   << float(time_elapsed) / 1000.0 << "s\r";
         std::cout.flush();
     }
 
-    void done() const
+    auto done() const noexcept
+        -> void
     {
         display();
         std::cout << std::endl;
     }
 };
+
 } // namespace progresscpp
