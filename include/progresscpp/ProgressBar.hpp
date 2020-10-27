@@ -28,7 +28,7 @@ public:
     ProgressBar(const ProgressBar&&) = delete;
 
     auto operator=(ProgressBar&&) noexcept -> ProgressBar& = default;
-    auto operator=(const ProgressBar&) -> ProgressBar& = default;
+    auto operator=(const ProgressBar&) -> ProgressBar& = delete;
 
     auto operator++() noexcept
         -> number_type
