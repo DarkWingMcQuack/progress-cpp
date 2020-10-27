@@ -33,15 +33,14 @@ public:
     auto operator++() noexcept
         -> number_type
     {
-        ticks_ = std::min(total_ticks_, ticks_ + 1);
+        *this += 1;
         return ticks_;
     }
 
     auto operator++(int) noexcept
         -> number_type
     {
-        ticks_ = std::min(total_ticks_, ticks_ + 1);
-        return ticks_;
+        return (*this)++;
     }
 
     auto operator+=(number_type i) noexcept
