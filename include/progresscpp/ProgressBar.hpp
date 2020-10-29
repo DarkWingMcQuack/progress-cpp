@@ -7,6 +7,37 @@
 
 namespace progresscpp {
 
+inline auto msToString(long ms)
+    -> std::string
+{
+    auto h = ms / (1000 * 60 * 60);
+    ms -= h * (1000 * 60 * 60);
+
+    auto m = ms / (1000 * 60);
+    ms -= m * (1000 * 60);
+
+    auto s = ms / 1000;
+    ms -= s * 1000;
+
+    std::stringstream ss;
+
+    ss << std::setfill('0')
+       << std::setw(2)
+       << h
+       << ':'
+       << std::setw(2)
+       << m
+       << ':'
+       << std::setw(2)
+       << s
+       << '.'
+       << std::setw(3)
+       << ms;
+
+    return ss.str();
+}
+
+
 template<class T>
 class ProgressBar
 {
@@ -68,10 +99,15 @@ public:
                   << std::setfill(incomplete_char_)
                   << std::setw(bar_width_ - pos + 1)
                   << "] "
+                  << " "
+                  << std::fixed
+                  << std::setprecision(2)
                   << static_cast<int>(progress * 100.0)
-                  << "% "
-                  << static_cast<double>(time_elapsed) / 1000.0
-                  << "s\r"
+                  << "% ["
+                  << msToString(static_cast<double>(time_elapsed)) // / 1000.0
+                  << "s, ETA: "
+                  << msToString(calculateETA())
+                  << "]s\r"
                   << std::flush;
     }
 
@@ -107,30 +143,62 @@ public:
         -> void
     {
         ticks_ = total_ticks_;
-        std::cout << "\033[1;32m";
-        display();
-        std::cout << "\033[0m";
-        std::cout << std::endl;
+        auto time_elapsed = millisecondSinceStart();
+        std::cout << "\r\033[1;32m"
+                  << "["
+                  << std::setfill(complete_char_)
+                  << std::setw(bar_width_ + 1)
+                  << "] "
+                  << 100
+                  << "% ["
+                  << msToString(static_cast<double>(time_elapsed)) // / 1000.0
+                  << "s]"
+                  << std::setfill(' ')
+                  << std::setw(25)
+                  << "\033[0m"
+                  << std::endl;
     }
 
-    auto failure(std::string_view error_message) noexcept
+    auto failure(std::string_view error_message = "") noexcept
         -> void
     {
         std::cout << "\033[1;31m";
-        display();
-        std::cout << "\n"
+
+        auto progress = static_cast<double>(ticks_) / total_ticks_;
+        auto pos = static_cast<number_type>(bar_width_ * progress);
+
+        auto time_elapsed = millisecondSinceStart();
+
+        std::cout << "["
+                  << std::setfill(complete_char_)
+                  << std::setw(pos)
+                  << (pos == bar_width_ ? '\0' : arrow_char_)
+                  << std::setfill(incomplete_char_)
+                  << std::setw(bar_width_ - pos + 1)
+                  << "] "
+                  << " "
+                  << std::fixed
+                  << std::setprecision(2)
+                  << static_cast<int>(progress * 100.0)
+                  << "% ["
+                  << msToString(static_cast<double>(time_elapsed)) // / 1000.0
+                  << "s, Failure"
+                  << "]"
+                  << std::setfill(' ')
+                  << std::setw(12)
+                  << (error_message.empty() ? '\0' : '\n')
                   << error_message
                   << "\033[0m"
                   << std::endl;
     }
 
-    auto failure() noexcept
-        -> void
+private:
+    auto calculateETA() const noexcept
+        -> long
     {
-        std::cout << "\033[1;31m";
-        display();
-        std::cout << "\033[0m"
-                  << std::endl;
+        auto progress = static_cast<float>(ticks_) / total_ticks_;
+        auto since_start = millisecondSinceStart();
+        return since_start / (progress * 100) * ((1 - progress) * 100);
     }
 
 private:
