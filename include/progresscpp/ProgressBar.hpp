@@ -40,7 +40,8 @@ public:
     auto operator++(int) noexcept
         -> number_type
     {
-        return (*this)++;
+        *this += 1;
+        return ticks_;
     }
 
     auto operator+=(number_type i) noexcept
