@@ -107,7 +107,7 @@ public:
                   << msToString(static_cast<double>(time_elapsed)) // / 1000.0
                   << "s, ETA: "
                   << msToString(calculateETA())
-                  << "]s\r"
+                  << "s]\r"
                   << std::flush;
     }
 
